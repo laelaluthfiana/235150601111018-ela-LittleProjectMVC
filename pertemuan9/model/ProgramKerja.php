@@ -1,46 +1,41 @@
 <?php
+class ProgramKerja {
+    private $db;
 
-require("config/koneksi_mysql.php");
-
-class ProgramKerja 
-{
-    private int $nomorProgram;
-    private string $nama;
-    private string $suratKeterangan;
-
-    public function createModel(
-        $nomorProgram = "",
-        $nama = "",
-        $suratKeterangan = "",
-    )
-    {
-        $this->nomorProgram = $nomorProgram;
-        $this->nama = $nama;
-        $this->suratKeterangan = $suratKeterangan;
+    public function __construct($database) {
+        $this->db = $database;
     }
 
-    public function fetchAllProgramKerja()
-    {
-        // implementasi fetch all rows with select
+    public function getAllProgramKerja() {
+        $query = "SELECT * FROM program_kerja";
+        $stmt = $this->db->query($query);
+        return $stmt->fetchAll();
     }
 
-    public function fetchOneProgramKerja(int $nomorProgram)
-    {
-        // implementasi fetch one row by nomor proker with select
+    public function addProgramKerja($name, $description, $date) {
+        $query = "INSERT INTO program_kerja (name, description, date) VALUES (:name, :description, :date)";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':name', $name);
+        $stmt->bindParam(':description', $description);
+        $stmt->bindParam(':date', $date);
+        return $stmt->execute();
     }
 
-    public function insertProgramKerja() 
-    {
-        // implementasi sql insert
+    public function updateProgramKerja($id, $name, $description, $date) {
+        $query = "UPDATE program_kerja SET name = :name, description = :description, date = :date WHERE id = :id";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':id', $id);
+        $stmt->bindParam(':name', $name);
+        $stmt->bindParam(':description', $description);
+        $stmt->bindParam(':date', $date);
+        return $stmt->execute();
     }
 
-    public function updateProgramKerja()
-    {
-        // implementasi sql update
-    }
-
-    public function deleteProgramKerja()
-    {
-        // implementasi sql delete   
+    public function deleteProgramKerja($id) {
+        $query = "DELETE FROM program_kerja WHERE id = :id";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':id', $id);
+        return $stmt->execute();
     }
 }
+?>
